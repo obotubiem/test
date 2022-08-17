@@ -4,7 +4,8 @@ const order =require('../controller/orders.controllers')
 const Validation = require('../validation/order/order.validation')
 
 router.get('/', order.findAll)
-router.post('/',order.createOrder)
+router.get('/:id', order.findOne)
+router.post('/', order.createOrder)
 router.put('/:id',Validation.createOrder, order.updateOrder)
 router.delete('/:id', order.delete)
 

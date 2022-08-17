@@ -1,5 +1,5 @@
 const db = require('../models/index.model');
-
+const bcrypt = require('bcrypt')
 
 
 exports.findAll = async (req, res) => {
@@ -70,8 +70,8 @@ exports.register = async (req, res) => {
     username = req.body.username,
     name = req.body.name,
     email = req.body.email,
-    password = req.body.password,
-    confrimPassword = req.body.confrimPassword,
+    password = bcrypt.hashSync(req.body.password, 10),
+    confrimPassword = bcrypt.hashSync(req.body.confrimpassword, 10),
     phone = req.body.phone,
     } = req.body
   

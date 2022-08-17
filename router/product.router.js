@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const product =require('../controller/product.controllers')
-const Validation = require('../validation/prduct/product.validation')
+const Validation = require('../validation/product/product.validation')
 
 router.get('/',product.findAll)
 router.get('/:id',product.findOne)

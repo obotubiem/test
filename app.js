@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const app = express()
 const db = require('./models/index.model') 
 
-db.sequelize.sync({force:false})
+// db.sequelize.sync({force:false})
 
 
 app.use(bodyParser.json())
@@ -26,9 +26,9 @@ app.use('/customer', customerRouter)
 const orderRouter = require('./router/order.router')
 app.use('/order', orderRouter)
 
+const orderDetailRouter = require('./router/order_detail.router')
+app.use('/order/detail', orderDetailRouter)
 
-const orderDetailRouter = require('./router/order.router')
-app.use('/orderdetail', orderDetailRouter)
 
 
 

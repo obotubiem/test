@@ -51,7 +51,10 @@ exports.findAll = async (req, res) =>{
 exports.findOne =async(req, res)=>{
   const id = req.params.id
   db.product.findOne({
-    where :{id:id}
+    where :{id:id},
+    // include :[
+    //   {model : db.category}
+    // ]
   }).then(result=>{
     if(!result){
       res.status(404).send({

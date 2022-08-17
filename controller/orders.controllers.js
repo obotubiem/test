@@ -1,11 +1,8 @@
 const db = require('../models/index.model')
 
 exports.createOrder = async(req, res)=>{
-
-  const data ={
    
-    customer_id : req.body.customer_id
-    }
+       const data ={customer_id:req.body.customer_id }
     await db.order
     .create(data)
     .then(result => {
@@ -76,6 +73,37 @@ exports.findAll = async (req, res) =>{
       });
     });
   };
+
+  exports.findOne = async (req, res) => {
+    const id = req.params.id
+   db.order.findOne({
+        where: { id: id },
+        include :[
+          {model : db.detail}
+        ]
+         })
+       db.order.findAll({
+        attributes: [ 'total',
+          
+          [db.sequelize.fn('sum', db.sequelize.col('order.total')), 'grandtotal'],
+        ],
+        group: ['total'],
+      
+       })
+    
+    .then(result => {
+        res.status(200).send({
+            code: 200,
+            message: "OK",
+            data: result
+        })
+    }).catch(err => {
+        res.status(500).send({
+            message: 'order tidak ditemukan' + err
+        })
+    })
+}
+
 
   exports.delete = async (req, res) => {
     const id = req.params.id
