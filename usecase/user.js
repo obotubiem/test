@@ -6,7 +6,9 @@ getUserByUsername: async (username) =>{
     let user = null
     try {
         user = await User.findOne({
-            where : {username: user}
+            where : {username: username}
+              
+              
         })
     } catch (error) {
         console.log(error)
