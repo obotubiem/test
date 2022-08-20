@@ -18,5 +18,7 @@ router.delete('/category/delete/:id', admin.destroyCategory)
 
 // order
 router.get('/order/:id', adminOrder.getOrder)
+router.patch('/order/update', admin.changeStatusOrder)
+router.get('/order', admin.getCompletedOrder)
 
 module.exports= router

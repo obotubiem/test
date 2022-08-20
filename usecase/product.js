@@ -1,45 +1,47 @@
 
 
-let {Product, product} = require("../models")
-let db =require("../models/index")
+
+const {Product} = require("../models")
+// let db =require("../models/index")
 
 
 
-  let  getAllProduct = async () =>{
-        let product=[]
-         try {
-            product =  Product.findAll({
-                include :[
-                {model : db.category,
-                attributes: ['id', 'name']
-                }
-              ]
-             
-            })
-        } catch (error) {
-            console.log(error)
-        }
-        return product
+getAllProduct = async (filters) => {
+    let options = {}
+    if (typeof filters !== "undefined" || filters !== null) {
+        options.where = filters
     }
+    let product = []
+
+    // error handling
+    try{
+        product = await Product.findAll(options)
+    } catch (e) {
+        console.log(e)
+    }
+
+    return product
+}
+
 
 
     let getProudctByID = async(id)=>{
         let product = null
         try {
             product =await Product.findOne({
-                where: {id:id},
-                include :[
-                    {model : db.category,
-                    attributes: ['id', 'name']
-                    }
-                  ]
+                where: {id:id}
+                // ,
+                // include :[
+                //     {model : db.category,
+                //     attributes: ['id', 'name']
+                //     }
+                //   ]
             })
         } catch (error) {
             console.log(error)
         }
-        return {
-            product : product
-        }
+        return product
+        
     }
 
    let createProduct = async (product) =>{

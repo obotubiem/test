@@ -37,8 +37,8 @@ exports.getOneProduct = async (req, res) => {
     status: "ok",
     message: "succes",
     data: product,
-  })
-}
+  });
+};
 
 // Get Category
 
@@ -55,50 +55,48 @@ exports.getlistCategory = async (req, res) => {
     res.status(404).json({
       code: 404,
       message: "category belum di tambahkan",
-    })
+    });
   }
-}
-
+};
 
 exports.getOneCategory = async (req, res) => {
-    let id = req.params.id;
-    let res_data = {
-      status: "ok",
-      message: "success",
-      data: null,
-    };
-    let category = await category_uc.getCategoryByID(id);
-    if (!category) {
-      res_data.status = "failed";
-      res_data.message = "product not found";
-      res.status(400);
-    }
-    res_data.data = category;
-    res.status(200).json({
-      status: "ok",
-      message: "succes",
-      data: category,
-    })
-    }
+  let id = req.params.id;
+  let res_data = {
+    status: "ok",
+    message: "success",
+    data: null,
+  };
+  let category = await category_uc.getCategoryByID(id);
+  if (!category) {
+    res_data.status = "failed";
+    res_data.message = "product not found";
+    res.status(400);
+  }
+  res_data.data = category;
+  res.status(200).json({
+    status: "ok",
+    message: "succes",
+    data: category,
+  });
+};
 
-
-    exports.getOneProductByCategory = async (req, res) => {
-        let id = req.params.id;
-        let res_data = {
-          status: "ok",
-          message: "success",
-          data: null,
-        };
-        let category = await category_uc.getProductByCategory(id);
-        if (!category) {
-          res_data.status = "failed";
-          res_data.message = "product not found";
-          res.status(400);
-        }
-        res_data.data = category;
-        res.status(200).json({
-          status: "ok",
-          message: "succes",
-          data: category,
-        })
-        }
+exports.getOneProductByCategory = async (req, res) => {
+  let id = req.params.id;
+  let res_data = {
+    status: "ok",
+    message: "success",
+    data: null,
+  };
+  let category = await category_uc.getProductByCategory(id);
+  if (!category) {
+    res_data.status = "failed";
+    res_data.message = "product not found";
+    res.status(400);
+  }
+  res_data.data = category;
+  res.status(200).json({
+    status: "ok",
+    message: "succes",
+    data: category,
+  });
+};
