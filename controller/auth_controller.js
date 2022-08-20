@@ -31,18 +31,18 @@ exports.register =async (req, res)=>{
         username: req.body.username,
         email:req.body.email,
         is_admin:false,
-        // password:req.body.password,
-        // confrimPassword :req.body.confrimPassword
+        password:req.body.password,
+        confrimPassword :req.body.confrimPassword
     }
-    let password =bcrypt.hashSync(req.body.password, 10)
-    let confrimPassword =bcrypt.hashSync(req.body.confrimPassword, 10)
+    // let password =bcrypt.hashSync(req.body.password, 10)
+    // let confrimPassword =bcrypt.hashSync(req.body.confrimPassword, 10)
     let res_data = {
         status: 'failed',
         message: '',
         data: null
     }
-    user.password = password
-    user.confrimPassword = confrimPassword
+    // user.password = password
+    // user.confrimPassword = confrimPassword
     
     // check if username not exits
     let user_res = await user_uc.getUserByUsername(user.username)
@@ -51,10 +51,10 @@ exports.register =async (req, res)=>{
         return res.status(400).json(res_data)
     }
     // insert user data
-    if(bcrypt.compareSync(user.password, user.confrimPassword)!==true){
-        res_data.message = 'password & confrim password invalid'
-        return res.status(400).json(res_data)
-    }
+    // if(bcrypt.compareSync(user.password, user.confrimPassword)!==true){
+    //     res_data.message = 'password & confrim password invalid'
+    //     return res.status(400).json(res_data)
+    // }
     
     let create_res = await user_uc.createUser(user)
    if(create_res.is_success !== true) {

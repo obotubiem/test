@@ -14,6 +14,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'order_id'
       })
     }
+    static associate(models) {
+      this.belongsTo(models.User, {
+        foreignKey: 'user_id'
+      })
+    }
+
+
   }
   Order.init({
     user_id: DataTypes.INTEGER,
