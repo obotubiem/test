@@ -1,6 +1,7 @@
 const order_constants = require("../internal/constants/order");
 const product_uc = require("../usecase/product");
-let db = require('../models/index')
+let db = require("../models/index");
+const order = require("../models/order");
 const Op = require("sequelize").Op;
 
 let getPendingOrderByUserID = async (user_id) => {
@@ -51,15 +52,17 @@ let createOrder = async (user_id, items) => {
     user_id: user_id,
     status: order_constants.ORDER_PENDING,
   };
+
   let res_order = null;
   try {
     res_order = await db.order.create(order);
+    order = await getPendingOrderByUserID(user_id);
+    await addOrderDetails(order.id, items);
     is_success = true;
   } catch (e) {
     console.log(e);
   }
-  order = await getPendingOrderByUserID(user_id);
-  await addOrderDetails(order.id, items);
+
   return {
     is_success: is_success,
     order: order,
@@ -71,24 +74,33 @@ let addOrderDetails = async (order_id, items) => {
     if (items[i].qty <= 0) {
       continue;
     }
+
     let product = null;
-    product = await product_uc.getProudctByID(items[i].id);
+    product = await product_uc.getProductByID(items[i].id);
 
     if (product !== null) {
       let detail = {
         order_id: order_id,
         product_id: product.id,
+        price: product.price,
         qty: items[i].qty,
-        total: product.price * items[i].qty,
       };
 
       try {
-        await db.orderDetail.create(detail);
+        await addOrderDetail(detail);
       } catch (e) {
         console.log(e);
       }
     }
   }
+};
+
+let addOrderDetail = async (data) => {
+  if (data.total === undefined) {
+    data.total = data.price * data.qty;
+  }
+
+  await db.orderDetail.create(data);
 };
 
 let changeOrderStatus = async (order_id, status) => {
@@ -148,26 +160,56 @@ let listCompletedOrder = async () => {
   return orders;
 };
 
-
 let updateOrder = async (user_id, items) => {
   let is_success = false;
-  let order = {
+  let updated_order = null;
+  
+  let data = {
     user_id: user_id,
     status: order_constants.ORDER_PENDING,
   };
-  let res_order = null;
+
   try {
-    res_order = await db.order.update(order);
-    console.log(res_order)
+    let order = await getPendingOrderByUserID(user_id);
+    await db.order.update(data, { where: { id: order.id } });
+
+    for (let i = 0; i < items.length; i++) {
+      const product = await product_uc.getProductByID(items[i].id);
+      if (product !== null) {
+        const existData = await db.orderDetail.findOne({ where: { product_id: product.id, order_id: order.id } });
+
+        if (existData !== null) {
+          await existData.update({ qty: items[i].qty });
+        } else {
+          let detailData = items[i];
+          detailData.product_id = product.id;
+          detailData.price = product.price;
+          detailData.order_id = order.id;
+
+          await addOrderDetail(detailData);
+        }
+      }
+    }
+
+    await db.orderDetail.destroy({
+      where: {
+        order_id: order.id,
+        product_id: {
+          [Op.notIn]: items.map((val) => val.id),
+        },
+      },
+    });
+
+    updated_order = await getPendingOrderByUserID(user_id);
+
     is_success = true;
   } catch (e) {
     console.log(e);
   }
-  order = await getPendingOrderByUserID(user_id);
-  await addOrderDetails(order.id, items);
+
   return {
     is_success: is_success,
-    order: order,
+    order: updated_order,
   };
 };
 
@@ -179,5 +221,5 @@ module.exports = {
   changeOrderStatus: changeOrderStatus,
   listOrderExcludePending: listOrderExcludePending,
   listCompletedOrder: listCompletedOrder,
-  updateOrder:updateOrder
+  updateOrder: updateOrder,
 };

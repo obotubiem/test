@@ -1,5 +1,3 @@
-
-
 const product_uc = require("../usecase/product");
 const category_uc = require("../usecase/category");
 
