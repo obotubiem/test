@@ -1,4 +1,3 @@
-let {Category} = require("../models")
 let db =require("../models/index")
 
 
@@ -10,7 +9,7 @@ let db =require("../models/index")
         let category=[]
 
         try {
-            category = await Category.findAll(option)
+            category = await db.category.findAll(option)
         } catch (error) {
             console.log(error)
         }
@@ -21,7 +20,7 @@ let db =require("../models/index")
     getCategoryByID = async(id)=>{
         let category = null
         try {
-            category =await Category.findOne({
+            category =await db.category.findOne({
                 where: {id:id}
             })
         } catch (error) {
@@ -32,7 +31,7 @@ let db =require("../models/index")
     getProductByCategory = async(id)=>{
         let category = null
         try {
-            category =await Category.findOne({
+            category =await db.category.findOne({
                 where: {id:id},
                 include :[
                     {model : db.product,
@@ -49,7 +48,7 @@ let db =require("../models/index")
     createCategory = async (category) =>{
         let is_success = false
         try {
-            category = await Category.create(category)
+            category = await db.category.create(category)
             is_success = true
         } catch (error) {
             console.log(error)
@@ -63,7 +62,7 @@ let db =require("../models/index")
 let deleteCategory = async (id) =>{
     let is_success =false 
     try {
-        category =await Category.destroy({
+        category =await db.category.destroy({
             where: {id:id}
         })
         is_success = true

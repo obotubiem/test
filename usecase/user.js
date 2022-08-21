@@ -1,11 +1,11 @@
-const {User} = require("../models")
+let db = require("../models/index")
 
 module.exports ={
 
 getUserByUsername: async (username) =>{
     let user = null
     try {
-        user = await User.findOne({
+        user = await db.user.findOne({
             where : {username: username}
               
               
@@ -18,7 +18,7 @@ getUserByUsername: async (username) =>{
 getUserByID : async (id) =>{
     let user = null
     try {
-        user = await User.findOne({
+        user = await db.user.findOne({
             where : {id:id}
         })
     } catch (error) {
@@ -29,7 +29,7 @@ getUserByID : async (id) =>{
 createUser : async (user) =>{
     let is_success = false
     try {
-        user = await User.create(user)
+        user = await db.user.create(user)
         is_success = true
     } catch (error) {
         console.log(error)

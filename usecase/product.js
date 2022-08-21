@@ -1,9 +1,8 @@
-const {Product} = require("../models")
 let db =require("../models/index")
 
 
 
-getAllProduct = async (filters) => {
+let getAllProduct = async (filters) => {
     let options = {}
     if (typeof filters !== "undefined" || filters !== null) {
         options.where = filters
@@ -44,7 +43,7 @@ getAllProduct = async (filters) => {
    let createProduct = async (product) =>{
         let is_success = false
         try {
-            product = await Product.create(product)
+            product = await db.product.create(product)
             is_success = true
         } catch (error) {
             console.log(error)
@@ -58,7 +57,7 @@ getAllProduct = async (filters) => {
     let updateProduct = async (product, id) =>{
         let is_success =false 
         try {
-            product =await Product.update(product,{
+            product =await db.product.update(product,{
                 where: {id:id}
             })
             is_success = true
@@ -73,7 +72,7 @@ getAllProduct = async (filters) => {
     let deleteProduct = async (id) =>{
         let is_success =false 
         try {
-            product =await Product.destroy({
+            product =await db.product.destroy({
                 where: {id:id}
             })
             is_success = true

@@ -34,12 +34,25 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+db.user = require('./user')(sequelize, Sequelize)
 db.category = require('./category')(sequelize, Sequelize)
 db.product = require('./product')(sequelize, Sequelize)
+db.order = require('./order')(sequelize, Sequelize)
+db.orderDetail = require('./orderdetail')(sequelize, Sequelize)
 
+db.user.hasMany(db.order,{foreignKey:"user_id"})
+db.order.belongsTo(db.user,{foreignKey:"user_id"})
 
 db.category.hasMany(db.product, {foreignKey:"category_id"})
-db.product.belongsTo(db.category, {foreignKey:"category_id"} )
+db.product.belongsTo(db.category, {foreignKey:"category_id"})
+
+db.order.hasMany(db.orderDetail, {foreignKey:"order_id"})
+db.orderDetail.belongsTo(db.orderDetail, {foreignKey:"order_id"})
+
+db.orderDetail.belongsTo(db.product, {foreignKey:"product_id"})
+db.product.hasMany(db.orderDetail, {foreignKey:"product_id"})
+
+
 
 
 

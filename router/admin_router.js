@@ -1,7 +1,6 @@
 const express = require("express")
 const router = express.Router()
 const admin = require('../controller/admin_item_controller')
-const adminOrder = require ('../controller/customer_order_controller')
 const Validation_product = require('../validation/product/product.validation')
 const Validation_category = require('../validation/category/category.validation')
 
@@ -19,7 +18,7 @@ router.delete('/category/delete/:id', admin.destroyCategory)
 
 
 // order
-router.get('/order/:id', adminOrder.getOrder)
+
 router.patch('/order/update', admin.changeStatusOrder)
 router.get('/order', admin.getCompletedOrder)
 

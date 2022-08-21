@@ -1,12 +1,12 @@
 const order_constants = require("../internal/constants/order");
 const product_uc = require("../usecase/product");
-const { Order, OrderDetail } = require("../models");
+let db = require('../models/index')
 const Op = require("sequelize").Op;
 
 let getPendingOrderByUserID = async (user_id) => {
   let order = null;
   try {
-    order = await Order.findOne({
+    order = await db.order.findOne({
       where: {
         user_id: user_id,
         status: order_constants.ORDER_PENDING,
@@ -20,7 +20,7 @@ let getPendingOrderByUserID = async (user_id) => {
     return order;
   }
 
-  let grandTotal = await OrderDetail.sum("total", {
+  let grandTotal = await db.orderDetail.sum("total", {
     where: { order_id: order.id },
   });
 
@@ -35,7 +35,7 @@ let getPendingOrderByUserID = async (user_id) => {
 let getDetailOrder = async (order_id) => {
   let details = [];
   try {
-    details = await OrderDetail.findAll({
+    details = await db.orderDetail.findAll({
       where: { order_id: order_id },
     });
   } catch (e) {
@@ -53,7 +53,7 @@ let createOrder = async (user_id, items) => {
   };
   let res_order = null;
   try {
-    res_order = await Order.create(order);
+    res_order = await db.order.create(order);
     is_success = true;
   } catch (e) {
     console.log(e);
@@ -83,7 +83,7 @@ let addOrderDetails = async (order_id, items) => {
       };
 
       try {
-        await OrderDetail.create(detail);
+        await db.orderDetail.create(detail);
       } catch (e) {
         console.log(e);
       }
@@ -92,7 +92,7 @@ let addOrderDetails = async (order_id, items) => {
 };
 
 let changeOrderStatus = async (order_id, status) => {
-  await Order.update(
+  await db.order.update(
     {
       status: status,
     },
@@ -103,7 +103,7 @@ let changeOrderStatus = async (order_id, status) => {
 };
 
 let listOrderExcludePending = async () => {
-  let orders = await Order.findAll({
+  let orders = await db.order.findAll({
     where: {
       [Op.and]: [
         {
@@ -128,7 +128,7 @@ let listOrderExcludePending = async () => {
 };
 
 let listCompletedOrder = async () => {
-  let orders = await Order.findAll({
+  let orders = await db.order.findAll({
     where: {
       [Op.or]: [
         {
@@ -148,6 +148,29 @@ let listCompletedOrder = async () => {
   return orders;
 };
 
+
+let updateOrder = async (user_id, items) => {
+  let is_success = false;
+  let order = {
+    user_id: user_id,
+    status: order_constants.ORDER_PENDING,
+  };
+  let res_order = null;
+  try {
+    res_order = await db.order.update(order);
+    console.log(res_order)
+    is_success = true;
+  } catch (e) {
+    console.log(e);
+  }
+  order = await getPendingOrderByUserID(user_id);
+  await addOrderDetails(order.id, items);
+  return {
+    is_success: is_success,
+    order: order,
+  };
+};
+
 module.exports = {
   getPendingOrderByUserID: getPendingOrderByUserID,
   getDetailOrder: getDetailOrder,
@@ -156,4 +179,5 @@ module.exports = {
   changeOrderStatus: changeOrderStatus,
   listOrderExcludePending: listOrderExcludePending,
   listCompletedOrder: listCompletedOrder,
+  updateOrder:updateOrder
 };

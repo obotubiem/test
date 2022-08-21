@@ -5,7 +5,10 @@ const customer_item =require('../controller/customer_item_controller')
 
 
 // customer order
+router.get('/order/:id', customer_order.getOrder)
 router.post('/order/add', customer_order.addOrder)
+router.put('/order/edit/:id', customer_order.updateOrderCustomer)
+
 // router.post('/order/add/detail/:id', order.addDetailOrder)
 router.patch ('/order/sumbit/:id', customer_order.changeStatus)
 
