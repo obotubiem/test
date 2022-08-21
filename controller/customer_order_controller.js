@@ -2,8 +2,7 @@ let order_uc = require("../usecase/order");
 let order_const = require("../internal/constants/order");
 
 exports.getOrder = async (req, res) => {
-    
- let id = req.params.id;
+  let id = req.params.id;
   let res_data = {
     status: "failed",
     message: "belum ada data",
@@ -47,10 +46,8 @@ exports.addOrder = async (req, res) => {
   res.json(res_data);
 };
 
-
-
 exports.updateOrderCustomer = async (req, res) => {
-  let id = req.query.id;
+  let id = req.query.user_id;
   let items = req.body.items;
 
   let res_data = {
@@ -58,22 +55,22 @@ exports.updateOrderCustomer = async (req, res) => {
     message: "something went wrong",
     data: null,
   };
-let create_res = await order_uc.updateOrder(id, items);
-if(create_res.is_success !== true) {
-  res_data.message = 'something went wrong'
-  return res.status(400).json(res_data)
-} 
-  
+
+  let create_res = await order_uc.updateOrder(id, items);
+  if (create_res.is_success !== true) {
+    res_data.message = "something went wrong";
+    return res.status(400).json(res_data);
+  }
 
   res_data.status = "ok";
   res_data.message = "success";
-  res_data.data = create_res.items
+  res_data.data = create_res.order;
 
   res.json(res_data);
 };
 
 exports.changeStatus = async (req, res) => {
- let id = req.params.id
+  let id = req.params.id;
 
   let res_data = {
     status: "failed",
