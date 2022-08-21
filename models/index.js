@@ -38,8 +38,8 @@ db.category = require('./category')(sequelize, Sequelize)
 db.product = require('./product')(sequelize, Sequelize)
 
 
-// db.category.hasMany(db.product, {foreignKey:"category_id"})
-// db.product.belongsTo(db.category, {foreignKey:"category_id"} )
+db.category.hasMany(db.product, {foreignKey:"category_id"})
+db.product.belongsTo(db.category, {foreignKey:"category_id"} )
 
 
 

@@ -1,8 +1,5 @@
-
-
-
 const {Product} = require("../models")
-// let db =require("../models/index")
+let db =require("../models/index")
 
 
 
@@ -15,7 +12,7 @@ getAllProduct = async (filters) => {
 
     // error handling
     try{
-        product = await Product.findAll(options)
+        product = await db.product.findAll(options)
     } catch (e) {
         console.log(e)
     }
@@ -28,14 +25,14 @@ getAllProduct = async (filters) => {
     let getProudctByID = async(id)=>{
         let product = null
         try {
-            product =await Product.findOne({
+            product =await db.product.findOne({
                 where: {id:id}
-                // ,
-                // include :[
-                //     {model : db.category,
-                //     attributes: ['id', 'name']
-                //     }
-                //   ]
+                ,
+                include :[
+                    {model : db.category,
+                    attributes: ['id', 'name']
+                    }
+                  ]
             })
         } catch (error) {
             console.log(error)

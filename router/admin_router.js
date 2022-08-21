@@ -1,18 +1,20 @@
 const express = require("express")
 const router = express.Router()
-const admin = require('../controller/admin_product_controller')
-const adminOrder = require ('../controller/order_controller')
+const admin = require('../controller/admin_item_controller')
+const adminOrder = require ('../controller/customer_order_controller')
+const Validation_product = require('../validation/product/product.validation')
+const Validation_category = require('../validation/category/category.validation')
 
 
 // product
-router.post('/product/add', admin.addProduct)
-router.put('/product/update/:id', admin.editProduct)
+router.post('/product/add',Validation_product.createProduct, admin.addProduct)
+router.put('/product/update/:id',Validation_product.createProduct, admin.editProduct)
 router.delete('/product/delete/:id', admin.delete)
 
 
 
 // category
-router.post('/category/add', admin.addCategory)
+router.post('/category/add',Validation_category.createCategory ,admin.addCategory)
 router.delete('/category/delete/:id', admin.destroyCategory)
 
 

@@ -7,9 +7,8 @@ const host = 'localhost'
 const port = 3000
 
 const authRouter = require('./router/auth_router')
-const productRouter = require('./router/product_router')
 const adminRouter = require('./router/admin_router')
-const customerOrder = require('./router/customer_order_router')
+const customerRouter = require('./router/customer_router')
 
 // app.use(bodyParser.json())
 app.use(express.json())
@@ -29,9 +28,8 @@ app.get('/',(req, res)=>{
 })
 
 app.use('/', authRouter)
-app.use('/product', productRouter)
 app.use('/admin', adminRouter)
-app.use('/customer', customerOrder)
+app.use('/customer', customerRouter)
 
 
 
